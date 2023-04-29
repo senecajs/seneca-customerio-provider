@@ -2,7 +2,7 @@
 
 import * as Fs from 'fs'
 
-// const Fetch = require('node-fetch')
+const { RegionEU } = require("customerio-node")
 
 
 const Seneca = require('seneca')
@@ -43,16 +43,28 @@ describe('customerio-provider', () => {
   })
 
 
-  test('list-brand', async () => {
-    if (!Config) return;
+  test('identify-person', async () => {
     const seneca = await makeSeneca()
 
-    const list = await seneca.entity("provider/customerio/brand").list$()
-    // console.log('BRANDS', list)
+    let p0 = seneca.entity('provider/customerio/person').data$({
+      id: 'p0',
+      name: 'Alice',
+      email: 'alice@example.com'
+    })
 
-    expect(list.length > 0).toBeTruthy()
+    // console.log(p0)
+
+    p0 = await p0.save$()
+
+    expect(p0).toMatchObject({
+      'entity$': 'provider/customerio/person',
+      id: 'p0',
+      name: 'Alice',
+      email: 'alice@example.com',
+      foo: 111
+    })
+
   })
-
 })
 
 
@@ -65,26 +77,31 @@ async function makeSeneca() {
       // debug: true,
       file: [__dirname + '/local-env.js;?'],
       var: {
-        $CUSTOMERIO_KEY: String,
-        $CUSTOMERIO_NAME: String,
-        $CUSTOMERIO_CUSTID: String,
-        $CUSTOMERIO_ACCID: String,
+        $CUSTOMERIO_SITEID: String,
+        $CUSTOMERIO_APIKEY: String,
       }
     })
     .use('provider', {
       provider: {
         customerio: {
           keys: {
-            key: { value: '$CUSTOMERIO_KEY' },
-            name: { value: '$CUSTOMERIO_NAME' },
-            cust: { value: '$CUSTOMERIO_CUSTID' },
-            acc: { value: '$CUSTOMERIO_ACCID' },
+            siteid: { value: '$CUSTOMERIO_SITEID' },
+            apikey: { value: '$CUSTOMERIO_APIKEY' },
           }
         }
       }
     })
     .use(CustomerioProvider, {
-      // fetch: Fetch,
+      sdkopts: {
+        region: RegionEU,
+      },
+      entity: {
+        person: {
+          save: {
+            foo: 111
+          }
+        }
+      }
     })
 
   return seneca.ready()

@@ -1,6 +1,4 @@
 module.exports = {
-  CUSTOMERIO_NAME: '<NAME>',
-  CUSTOMERIO_KEY: '<KEY>',
-  CUSTOMERIO_CUSTID: '<customerIdentifier>',
-  CUSTOMERIO_ACCID: '<accountIdentifier>',
+  CUSTOMERIO_SITEID: '<SITEID>',
+  CUSTOMERIO_APIKEY: '<APIKEY>',
 }
