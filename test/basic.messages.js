@@ -4,7 +4,7 @@ const Pkg = require('../package.json')
 
 module.exports = {
   print: false,
-  pattern: 'sys:provider,provider:tangocard',
+  pattern: 'sys:provider,provider:customerio',
   allow: { missing: true },
 
   calls: [
@@ -12,7 +12,7 @@ module.exports = {
       pattern: 'get:info',
       out: {
         ok: true,
-        name: 'tangocard',
+        name: 'customerio',
         version: Pkg.version,
       },
     }

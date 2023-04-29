@@ -8,8 +8,8 @@ import * as Fs from 'fs'
 const Seneca = require('seneca')
 const SenecaMsgTest = require('seneca-msg-test')
 
-import TangocardProvider from '../src/tangocard-provider'
-import TangocardProviderDoc from '../src/TangocardProvider-doc'
+import CustomerioProvider from '../src/customerio-provider'
+import CustomerioProviderDoc from '../src/CustomerioProvider-doc'
 
 const BasicMessages = require('./basic.messages.js')
 
@@ -21,18 +21,18 @@ if (Fs.existsSync(__dirname + '/local-config.js')) {
 }
 
 
-describe('tangocard-provider', () => {
+describe('customerio-provider', () => {
 
   test('happy', async () => {
-    expect(TangocardProvider).toBeDefined()
-    expect(TangocardProviderDoc).toBeDefined()
+    expect(CustomerioProvider).toBeDefined()
+    expect(CustomerioProviderDoc).toBeDefined()
 
     const seneca = await makeSeneca()
 
-    expect(await seneca.post('sys:provider,provider:tangocard,get:info'))
+    expect(await seneca.post('sys:provider,provider:customerio,get:info'))
       .toMatchObject({
         ok: true,
-        name: 'tangocard',
+        name: 'customerio',
       })
   })
 
@@ -47,7 +47,7 @@ describe('tangocard-provider', () => {
     if (!Config) return;
     const seneca = await makeSeneca()
 
-    const list = await seneca.entity("provider/tangocard/brand").list$()
+    const list = await seneca.entity("provider/customerio/brand").list$()
     // console.log('BRANDS', list)
 
     expect(list.length > 0).toBeTruthy()
@@ -65,25 +65,25 @@ async function makeSeneca() {
       // debug: true,
       file: [__dirname + '/local-env.js;?'],
       var: {
-        $TANGOCARD_KEY: String,
-        $TANGOCARD_NAME: String,
-        $TANGOCARD_CUSTID: String,
-        $TANGOCARD_ACCID: String,
+        $CUSTOMERIO_KEY: String,
+        $CUSTOMERIO_NAME: String,
+        $CUSTOMERIO_CUSTID: String,
+        $CUSTOMERIO_ACCID: String,
       }
     })
     .use('provider', {
       provider: {
-        tangocard: {
+        customerio: {
           keys: {
-            key: { value: '$TANGOCARD_KEY' },
-            name: { value: '$TANGOCARD_NAME' },
-            cust: { value: '$TANGOCARD_CUSTID' },
-            acc: { value: '$TANGOCARD_ACCID' },
+            key: { value: '$CUSTOMERIO_KEY' },
+            name: { value: '$CUSTOMERIO_NAME' },
+            cust: { value: '$CUSTOMERIO_CUSTID' },
+            acc: { value: '$CUSTOMERIO_ACCID' },
           }
         }
       }
     })
-    .use(TangocardProvider, {
+    .use(CustomerioProvider, {
       // fetch: Fetch,
     })
 
