@@ -1,6 +1,6 @@
 {
   "name": "@seneca/customerio-provider",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/customerio-provider.js",
   "type": "commonjs",
   "types": "dist/customerio-provider.d.ts",
@@ -40,9 +40,9 @@
     "node": ">=14"
   },
   "dependencies": {
+    "customerio-node": ">=4"
   },
   "peerDependencies": {
-    "customerio-node": ">=4",
     "@seneca/env": ">=0.2",
     "@seneca/provider": ">=1.0",
     "seneca": ">=3",
