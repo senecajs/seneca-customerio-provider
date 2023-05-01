@@ -1,6 +1,6 @@
 {
   "name": "@seneca/customerio-provider",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/customerio-provider.js",
   "type": "commonjs",
   "types": "dist/customerio-provider.d.ts",

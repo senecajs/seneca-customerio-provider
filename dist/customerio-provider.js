@@ -1,8 +1,12 @@
 "use strict";
 /* Copyright © 2023 Seneca Project Contributors, MIT License. */
 Object.defineProperty(exports, "__esModule", { value: true });
-const { TrackClient } = require("customerio-node");
+const { TrackClient, RegionUS, RegionEU } = require("customerio-node");
 const Pkg = require('../package.json');
+const regionMap = {
+    RegionEU,
+    RegionUS,
+};
 function CustomerioProvider(options) {
     const seneca = this;
     const entityBuilder = this.export('provider/entityBuilder');
@@ -44,10 +48,15 @@ function CustomerioProvider(options) {
         if (!res.ok) {
             throw this.fail('keymap');
         }
-        this.shared.sdk = new TrackClient(res.keymap.siteid.value, res.keymap.apikey.value, options.sdkopts);
+        this.shared.sdk = new TrackClient(res.keymap.siteid.value, res.keymap.apikey.value, {
+            region: regionMap[options.region],
+            ...options.sdkopts,
+        });
     });
     return {
-        exports: {}
+        exports: {
+            sdk: () => this.shared.sdk
+        }
     };
 }
 // Default options.
@@ -59,6 +68,7 @@ const defaults = {
             }
         }
     },
+    region: 'RegionUS',
     sdkopts: {},
     // TODO: Enable debug logging
     debug: false
