@@ -40,6 +40,31 @@ function CustomerioProvider(options) {
                         },
                     }
                 }
+            },
+            event: {
+                cmd: {
+                    save: {
+                        action: async function (entize, msg) {
+                            let data = this.util.deep(options.entity.event.save, msg.ent.data$(false));
+                            data.id = null == data.id$ ? data.id : data.id$;
+                            delete data.id$;
+                            if (null == data.id) {
+                                throw this.error('event.id is required');
+                            }
+                            if (null == data.identity) {
+                                throw this.error('event.identity is required');
+                            }
+                            if (null == data.name) {
+                                throw this.error('event.name is required');
+                            }
+                            let out = await this.shared.sdk.track(data.identity, {
+                                name: data.name,
+                                data: data,
+                            });
+                            return entize(data);
+                        },
+                    }
+                }
             }
         }
     });
