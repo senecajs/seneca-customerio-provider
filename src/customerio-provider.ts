@@ -145,7 +145,12 @@ const defaults: CustomerioProviderOptions = {
       save: {
         // Default fields
       }
-    }
+    },
+    event: {
+      save: {
+        // Default fields
+      }
+    },
   },
 
   region: 'RegionUS',

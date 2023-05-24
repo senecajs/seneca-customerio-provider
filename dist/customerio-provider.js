@@ -91,7 +91,12 @@ const defaults = {
             save: {
             // Default fields
             }
-        }
+        },
+        event: {
+            save: {
+            // Default fields
+            }
+        },
     },
     region: 'RegionUS',
     sdkopts: {},
