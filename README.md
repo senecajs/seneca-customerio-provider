@@ -7,7 +7,7 @@ Provides access to the Customerio API using the Seneca *provider*
 convention. Customerio API entities are represented as Seneca entities so
 that they can be accessed using the Seneca entity API and messages.
 
-See [seneca-entity](senecajs/seneca-entity) and the [Seneca Data
+See [@seneca/entity](https://github.com/senecajs/seneca-entity) and the [Seneca Data
 Entities
 Tutorial](https://senecajs.org/docs/tutorials/understanding-data-entities.html) for more details on the Seneca entity API.
 
@@ -30,44 +30,49 @@ NOTE: underlying third party SDK needs to be replaced as out of date and has a s
 
 ```js
 
-// Setup - get the key value (<SECRET>) separately from a vault or
+// Setup - get the key values (<SECRET>) separately from a vault or
 // environment variable.
-Seneca()
-  // Get API keys using the seneca-env plugin
-  .use('env', {
+const seneca = Seneca()
+  .use('@seneca/entity')
+  // Get API keys using the @seneca/env plugin
+  .use('@seneca/env', {
     var: {
+      $CUSTOMERIO_SITEID: String,
       $CUSTOMERIO_APIKEY: String,
-      $CUSTOMERIO_USERTOKEN: String,
     }
   })
-  .use('provider', {
+  .use('@seneca/provider', {
     provider: {
       customerio: {
         keys: {
+          siteid: { value: '$CUSTOMERIO_SITEID' },
           apikey: { value: '$CUSTOMERIO_APIKEY' },
-          usertoken: { value: '$CUSTOMERIO_USERTOKEN' },
         }
       }
     }
   })
-  .use('customerio-provider')
+  .use('@seneca/customerio-provider')
 
-let board = await seneca.entity('provider/customerio/board')
-  .load$('<customerio-board-id>')
+await seneca.ready()
 
-Console.log('BOARD', board)
+// Identify (create or update) a person.
+let person = await seneca.entity('provider/customerio/person')
+  .data$({ id: 'p0', email: 'alice@example.com' })
+  .save$()
 
-board.desc = 'New description'
-board = await board.save$()
-
-Console.log('UPDATED BOARD', board)
+// Track an event for that person.
+await seneca.entity('provider/customerio/event')
+  .data$({ id: 'e0', identity: 'p0', name: 'signup' })
+  .save$()
 
 ```
 
 ## Install
 
+Requires Seneca 4 and Node.js 24 or later.
+
 ```sh
-$ npm install @seneca/customerio-provider @seneca/env
+$ npm install seneca@^4 @seneca/entity @seneca/provider @seneca/env @seneca/customerio-provider
 ```
 
 
